@@ -26,6 +26,15 @@ export const siteSettings = defineType({
       group: "main",
     }),
     defineField({
+      name: "ogImage",
+      title: "Картинка для превью ссылок (1200×630)",
+      description:
+        "Показывается, когда ссылкой на сайт делятся в мессенджерах и соцсетях. Если не выбрать, возьмётся фото первой работы с главной",
+      type: "image",
+      group: "main",
+      options: { hotspot: true },
+    }),
+    defineField({
       name: "portrait",
       title: "Фото для «Обо мне»",
       type: "image",

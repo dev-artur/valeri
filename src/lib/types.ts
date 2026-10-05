@@ -45,6 +45,8 @@ export type Contacts = {
 export type SiteSettings = {
   title: string;
   tagline?: string;
+  /** Картинка для превью ссылок; без неё берётся фото работы */
+  ogImage?: ArtImage;
   portrait?: ArtImage;
   about: PortableTextBlock[];
   contacts: Contacts;

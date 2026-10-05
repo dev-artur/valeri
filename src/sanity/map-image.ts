@@ -46,6 +46,26 @@ export function mapSanityImage(img: SanityImageResult, fallbackAlt: string): Art
   };
 }
 
+/**
+ * URL картинки из Sanity CDN, обрезанной под точный размер вокруг точки фокуса.
+ * Для не-Sanity картинок (моки) возвращает undefined.
+ */
+export function sanityCroppedUrl(image: ArtImage, width: number, height: number): string | undefined {
+  if (!image.src.startsWith("https://cdn.sanity.io/")) return undefined;
+  const url = new URL(image.src);
+  url.searchParams.set("w", String(width));
+  url.searchParams.set("h", String(height));
+  url.searchParams.set("fit", "crop");
+  if (image.focus) {
+    url.searchParams.set("crop", "focalpoint");
+    url.searchParams.set("fp-x", String(image.focus.x / 100));
+    url.searchParams.set("fp-y", String(image.focus.y / 100));
+  }
+  url.searchParams.set("fm", "jpg");
+  url.searchParams.set("q", "85");
+  return url.toString();
+}
+
 function clampPercent(v: number) {
   return Math.round(Math.min(1, Math.max(0, v)) * 100);
 }

@@ -63,7 +63,11 @@ export const getCategories = cache(async (): Promise<Category[]> => {
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
   if (!isSanityConfigured) return mockSettings;
-  const raw = await sanityFetch<Raw<SiteSettings, "portrait"> | null>(settingsQuery);
+  const raw = await sanityFetch<Raw<SiteSettings, "portrait" | "ogImage"> | null>(settingsQuery);
   if (!raw) return { title: "Valeri", about: [], contacts: {} };
-  return { ...raw, portrait: mapSanityImage(raw.portrait as SanityImageResult, raw.title) };
+  return {
+    ...raw,
+    ogImage: mapSanityImage(raw.ogImage as SanityImageResult, raw.title),
+    portrait: mapSanityImage(raw.portrait as SanityImageResult, raw.title),
+  };
 });

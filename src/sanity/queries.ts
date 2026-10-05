@@ -54,6 +54,7 @@ export const settingsQuery = defineQuery(`
   *[_type == "siteSettings" && _id == "siteSettings"][0] {
     title,
     tagline,
+    "ogImage": ogImage${image},
     "portrait": portrait${image},
     "about": coalesce(about, []),
     "contacts": { telegram, whatsapp, instagram, vk, email }

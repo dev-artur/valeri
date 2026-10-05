@@ -54,6 +54,19 @@ Open http://localhost:3000. Without `NEXT_PUBLIC_SANITY_PROJECT_ID` the site use
 
 Without the webhook, changes still appear within an hour.
 
+## Link previews (Open Graph)
+
+The home page, `/catalog` and `/about` share one generated preview image, [src/app/(site)/opengraph-image.tsx](src/app/(site)/opengraph-image.tsx): a 1200×630 card with the site name and tagline on the left and a picture on the right. It's rendered with `ImageResponse` from `next/og`, using local TTF fonts from `og-fonts/` (Cormorant Garamond and Manrope, OFL). It goes through the same data layer and cache tag as the pages, so the webhook refreshes it too.
+
+The picture is chosen in this order:
+
+1. **Site settings → «Картинка для превью ссылок (1200×630)»** (`ogImage`) in Studio. The hotspot set there decides how the image is cropped.
+2. The first photo of the first featured artwork.
+3. The first photo of the first artwork.
+4. No picture: the text takes the full width.
+
+Artwork pages keep their own preview, the artwork's cover photo.
+
 ## Project structure
 
 | Path | Contents |
