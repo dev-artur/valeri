@@ -204,6 +204,12 @@ export const mockArtworks: Artwork[] = [
     images: [img("craft-2", 1200, 1200, "Набор открыток")],
     status: "commission",
     price: null,
+    options: [
+      { label: "5 штук", price: 900 },
+      { label: "10 штук", price: 1600 },
+      { label: "20 штук", price: 2900 },
+    ],
+    optionsTitle: "Набор",
     featured: false,
     description: text("Открытки с репродукциями картин. Делаю наборы под заказ — к праздникам и для подарков."),
     dimensions: "10 × 15 см",

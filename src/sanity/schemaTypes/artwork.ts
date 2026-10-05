@@ -79,7 +79,54 @@ export const artwork = defineType({
       description: "Оставьте пустым — на сайте будет «Цена по запросу»",
       type: "number",
       group: "main",
+      hidden: ({ document }) => hasOptions(document),
       validation: (rule) => rule.min(0).integer(),
+    }),
+    defineField({
+      name: "options",
+      title: "Варианты с разной ценой",
+      description:
+        "Например, размеры картины на заказ. Покупатель выберет вариант на странице работы, и цена поменяется. Поле «Цена» тогда не нужно",
+      type: "array",
+      group: "main",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "option",
+          title: "Вариант",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Вариант",
+              description: "Например: 30 × 30 см",
+              type: "string",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "price",
+              title: "Цена, ₽",
+              type: "number",
+              validation: (rule) => rule.required().min(0).integer(),
+            }),
+          ],
+          preview: {
+            select: { title: "label", price: "price" },
+            prepare: ({ title, price }) => ({
+              title,
+              subtitle: typeof price === "number" ? `${price.toLocaleString("ru-RU")} ₽` : undefined,
+            }),
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: "optionsTitle",
+      title: "Подпись над вариантами",
+      description: "Например: Размер, Количество",
+      type: "string",
+      group: "main",
+      initialValue: "Размер",
+      hidden: ({ document }) => !hasOptions(document),
     }),
     defineField({
       name: "featured",
@@ -151,3 +198,7 @@ export const artwork = defineType({
     },
   },
 });
+
+function hasOptions(document?: Record<string, unknown>) {
+  return Array.isArray(document?.options) && document.options.length > 0;
+}

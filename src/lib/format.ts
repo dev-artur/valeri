@@ -1,3 +1,5 @@
+import type { Artwork } from "./types";
+
 const rub = new Intl.NumberFormat("ru-RU", {
   style: "currency",
   currency: "RUB",
@@ -6,6 +8,12 @@ const rub = new Intl.NumberFormat("ru-RU", {
 
 export function formatPrice(price: number | null) {
   return price === null ? "Цена по запросу" : rub.format(price);
+}
+
+/** Цена для карточки: у работы с вариантами — «от» самой дешёвой. */
+export function formatCardPrice(artwork: Pick<Artwork, "price" | "options">) {
+  if (artwork.options?.length) return `от ${rub.format(Math.min(...artwork.options.map((o) => o.price)))}`;
+  return artwork.price === null ? "" : rub.format(artwork.price);
 }
 
 const plural = new Intl.PluralRules("ru-RU");

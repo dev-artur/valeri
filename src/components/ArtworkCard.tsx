@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatPrice } from "@/lib/format";
+import { formatCardPrice } from "@/lib/format";
 import { STATUS_LABELS } from "@/lib/status";
 import type { Artwork } from "@/lib/types";
 import { ArtImage } from "./ArtImage";
@@ -29,7 +29,7 @@ export function ArtworkCard({ artwork, preload }: { artwork: Artwork; preload?: 
           {artwork.title}
         </h3>
         <p className={`shrink-0 text-sm ${sold ? "text-sold line-through decoration-1" : "text-ink"}`}>
-          {artwork.price === null ? "" : formatPrice(artwork.price)}
+          {formatCardPrice(artwork)}
         </p>
       </div>
       <p className="mt-1 text-sm text-muted">

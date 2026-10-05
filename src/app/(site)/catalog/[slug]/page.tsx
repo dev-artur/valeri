@@ -3,11 +3,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { toPlainText } from "next-sanity";
 import { ArtworkGrid } from "@/components/ArtworkCard";
-import { ContactButtons } from "@/components/ContactButtons";
+import {
+  ArtworkContactButtons,
+  ArtworkOptionPicker,
+  ArtworkOptionsColumn,
+  ArtworkPrice,
+} from "@/components/ArtworkOptions";
 import { Gallery } from "@/components/Gallery";
 import { RichText } from "@/components/RichText";
 import { getArtwork, getArtworks, getSettings } from "@/lib/data";
-import { formatPrice, siteUrl } from "@/lib/format";
+import { siteUrl } from "@/lib/format";
 import { STATUS_LABELS } from "@/lib/status";
 
 export async function generateStaticParams() {
@@ -68,17 +73,17 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
       <article className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-14">
         <Gallery images={artwork.images} title={artwork.title} />
 
-        <div className="lg:sticky lg:top-24 lg:self-start">
+        <ArtworkOptionsColumn artwork={artwork} className="lg:sticky lg:top-24 lg:self-start">
           <h1 className="font-serif text-4xl leading-tight sm:text-5xl">{artwork.title}</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-            {!(artwork.status === "sold" && artwork.price === null) && (
-              <p className={`text-2xl ${artwork.status === "sold" ? "text-sold line-through decoration-1" : ""}`}>
-                {formatPrice(artwork.price)}
-              </p>
+            {!(artwork.status === "sold" && artwork.price === null && !artwork.options?.length) && (
+              <ArtworkPrice className={`text-2xl ${artwork.status === "sold" ? "text-sold line-through decoration-1" : ""}`} />
             )}
             <StatusBadge status={artwork.status} />
           </div>
+
+          {artwork.status !== "sold" && <ArtworkOptionPicker />}
 
           {details.length > 0 && (
             <dl className="mt-8 divide-y divide-line border-y border-line text-sm">
@@ -94,13 +99,9 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
           <RichText value={artwork.description} className="mt-8 leading-relaxed" />
 
           <div className="mt-8">
-            <ContactButtons
-              artwork={artwork}
-              contacts={settings.contacts}
-              url={`${siteUrl}/catalog/${artwork.slug}`}
-            />
+            <ArtworkContactButtons contacts={settings.contacts} url={`${siteUrl}/catalog/${artwork.slug}`} />
           </div>
-        </div>
+        </ArtworkOptionsColumn>
       </article>
 
       {related.length > 0 && (

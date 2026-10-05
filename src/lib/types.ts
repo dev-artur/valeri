@@ -19,6 +19,9 @@ export type Category = CategoryRef & {
   count: number;
 };
 
+/** Вариант работы со своей ценой, например размер картины на заказ */
+export type ArtworkOption = { label: string; price: number };
+
 export type Artwork = {
   id: string;
   title: string;
@@ -27,6 +30,10 @@ export type Artwork = {
   images: ArtImage[];
   status: ArtworkStatus;
   price: number | null;
+  /** Если есть, цена берётся из выбранного варианта, а не из price */
+  options?: ArtworkOption[];
+  /** Подпись над вариантами, например «Размер» */
+  optionsTitle?: string;
   featured: boolean;
   description: PortableTextBlock[];
   dimensions?: string;

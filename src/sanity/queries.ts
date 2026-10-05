@@ -18,6 +18,8 @@ const artworkFields = /* groq */ `
   "images": images[]${image},
   status,
   price,
+  "options": coalesce(options[defined(label) && defined(price)]{ label, price }, []),
+  "optionsTitle": coalesce(optionsTitle, "Размер"),
   "featured": coalesce(featured, false),
   "description": coalesce(description, []),
   dimensions,

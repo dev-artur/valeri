@@ -21,7 +21,8 @@ Built with Next.js 16 (App Router), Sanity 6, Tailwind CSS 4 and TypeScript. It'
 - **Embedded CMS.** Sanity Studio lives at `/studio` inside the same Next.js app. It has a Russian UI, drag-and-drop ordering of artworks and categories (LexoRank via `@sanity/orderable-document-list`), and a singleton "Site settings" document, so a non-technical editor can't create duplicates or delete it.
 - **Image pipeline on the Sanity CDN.** A custom `next/image` loader requests resized WebP/AVIF from Sanity. The crop and focal point (hotspot) the editor picks in Studio are applied in previews, and LQIP blur placeholders come straight from asset metadata.
 - **Catalog filters synced to the URL.** Category and "available only" filters live in search params, so filtered views are shareable. They run client-side over a statically generated page and fall back to plain links without JS.
-- **Messenger checkout.** No cart or payments: contact links build Telegram/WhatsApp deep links with the artwork title and URL already in the message.
+- **Price options.** An artwork can have variants with their own prices, such as canvas sizes for a commissioned portrait. Buyers pick one on the artwork page, the price updates, and catalog cards show "from" the lowest price. The selection lives in a small client component, while the rest of the page stays server-rendered.
+- **Messenger checkout.** No cart or payments: contact links build Telegram/WhatsApp deep links with the artwork title, chosen option and URL already in the message.
 - **SEO.** Generated `sitemap.xml` and `robots.txt`, per-artwork Open Graph images from the cover photo. The site URL comes from Vercel's production domain when it isn't set explicitly.
 - **Works without a CMS.** If no Sanity project ID is configured, the site runs on local mock data, so it can be cloned and started right away.
 

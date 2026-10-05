@@ -1,11 +1,23 @@
 import { contactLinks } from "@/lib/contacts";
-import type { Artwork, Contacts } from "@/lib/types";
+import { formatPrice } from "@/lib/format";
+import type { Artwork, ArtworkOption, Contacts } from "@/lib/types";
 
-export function ContactButtons({ artwork, contacts, url }: { artwork: Artwork; contacts: Contacts; url: string }) {
+type Props = {
+  artwork: Artwork;
+  contacts: Contacts;
+  url: string;
+  /** Выбранный вариант (размер и т. п.) — попадёт в текст сообщения */
+  option?: ArtworkOption;
+};
+
+export function ContactButtons({ artwork, contacts, url, option }: Props) {
   const sold = artwork.status === "sold";
+  const choice = option
+    ? `, ${(artwork.optionsTitle ?? "вариант").toLowerCase()} ${option.label} — ${formatPrice(option.price)}`
+    : "";
   const message = sold
     ? `Здравствуйте! Увидел(а) на сайте работу «${artwork.title}» — можно заказать похожую? ${url}`
-    : `Здравствуйте! Интересует работа «${artwork.title}». ${url}`;
+    : `Здравствуйте! Интересует работа «${artwork.title}»${choice}. ${url}`;
   const links = contactLinks(contacts, { subject: `Работа «${artwork.title}»`, text: message });
   if (links.length === 0) return null;
 
