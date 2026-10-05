@@ -4,9 +4,11 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { ArtImage as ArtImageType } from "@/lib/types";
 import { ArtImage } from "./ArtImage";
+import { useSharedPhotoIndex } from "./ArtworkOptions";
 
 export function Gallery({ images, title }: { images: ArtImageType[]; title: string }) {
-  const [index, setIndex] = useState(0);
+  const localIndex = useState(0);
+  const [index, setIndex] = useSharedPhotoIndex() ?? localIndex;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const touchX = useRef<number | null>(null);
   const current = images[index];
@@ -23,7 +25,7 @@ export function Gallery({ images, title }: { images: ArtImageType[]; title: stri
     };
     dialog.addEventListener("keydown", onKey);
     return () => dialog.removeEventListener("keydown", onKey);
-  }, [images.length]);
+  }, [images.length, setIndex]);
 
   const swipe = {
     onTouchStart: (e: React.TouchEvent) => {

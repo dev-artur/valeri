@@ -207,7 +207,7 @@ export const mockArtworks: Artwork[] = [
     options: [
       { label: "5 штук", price: 900 },
       { label: "10 штук", price: 1600 },
-      { label: "20 штук", price: 2900 },
+      { label: "20 штук", price: 2900, image: img("craft-1", 1200, 1200, "Набор из 20 открыток") },
     ],
     optionsTitle: "Набор",
     featured: false,

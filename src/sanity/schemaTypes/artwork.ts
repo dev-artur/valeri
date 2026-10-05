@@ -108,12 +108,20 @@ export const artwork = defineType({
               type: "number",
               validation: (rule) => rule.required().min(0).integer(),
             }),
+            defineField({
+              name: "image",
+              title: "Фото для этого варианта",
+              description: "Необязательно. Добавится в галерею, и при выборе варианта на сайте покажется это фото",
+              type: "image",
+              options: { hotspot: true },
+            }),
           ],
           preview: {
-            select: { title: "label", price: "price" },
-            prepare: ({ title, price }) => ({
+            select: { title: "label", price: "price", media: "image" },
+            prepare: ({ title, price, media }) => ({
               title,
               subtitle: typeof price === "number" ? `${price.toLocaleString("ru-RU")} ₽` : undefined,
+              media,
             }),
           },
         }),

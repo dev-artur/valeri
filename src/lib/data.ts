@@ -20,22 +20,28 @@ function sanityFetch<T>(query: string, params: QueryParams = {}) {
   });
 }
 
-function mapArtwork(raw: Raw<Artwork, "images">): Artwork {
+type RawOption = { label: string; price: number; image: SanityImageResult };
+
+function mapArtwork(raw: Raw<Artwork, "images" | "options">): Artwork {
   const images = ((raw.images as SanityImageResult[] | null) ?? [])
     .map((img) => mapSanityImage(img, raw.title))
     .filter((img) => img !== undefined);
-  return { ...raw, images };
+  const options = ((raw.options as RawOption[] | null) ?? []).map((o) => ({
+    ...o,
+    image: mapSanityImage(o.image, `${raw.title}, ${o.label}`),
+  }));
+  return { ...raw, images, options };
 }
 
 export const getArtworks = cache(async (): Promise<Artwork[]> => {
   if (!isSanityConfigured) return mockArtworks;
-  const raw = await sanityFetch<Raw<Artwork, "images">[]>(artworksQuery);
+  const raw = await sanityFetch<Raw<Artwork, "images" | "options">[]>(artworksQuery);
   return raw.map(mapArtwork).filter((a) => a.images.length > 0);
 });
 
 export const getArtwork = cache(async (slug: string): Promise<Artwork | null> => {
   if (!isSanityConfigured) return mockArtworks.find((a) => a.slug === slug) ?? null;
-  const raw = await sanityFetch<Raw<Artwork, "images"> | null>(artworkBySlugQuery, { slug });
+  const raw = await sanityFetch<Raw<Artwork, "images" | "options"> | null>(artworkBySlugQuery, { slug });
   return raw ? mapArtwork(raw) : null;
 });
 

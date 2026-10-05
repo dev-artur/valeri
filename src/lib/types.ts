@@ -20,7 +20,7 @@ export type Category = CategoryRef & {
 };
 
 /** Вариант работы со своей ценой, например размер картины на заказ */
-export type ArtworkOption = { label: string; price: number };
+export type ArtworkOption = { label: string; price: number; image?: ArtImage };
 
 export type Artwork = {
   id: string;

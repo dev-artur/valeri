@@ -1,24 +1,35 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { formatPrice } from "@/lib/format";
+import { createContext, useContext, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { formatPrice, galleryImages } from "@/lib/format";
 import type { Artwork, Contacts } from "@/lib/types";
 import { ContactButtons } from "./ContactButtons";
 
-// Выбранный вариант (размер и т. п.) нужен цене, кнопкам выбора и кнопке покупки, которые стоят в колонке
-// в разных местах. Колонка — клиентский провайдер, а всё остальное в ней приходит с сервера через children.
+// Выбранный вариант (размер и т. п.) нужен цене, кнопкам выбора, кнопке покупки и галерее, которые стоят
+// на странице в разных местах. Карточка работы — клиентский провайдер, остальное приходит с сервера через children.
 
-type State = { artwork: Artwork; index: number; select: (i: number) => void };
+type State = {
+  artwork: Artwork;
+  index: number;
+  select: (i: number) => void;
+  /** Текущее фото галереи — общее, чтобы выбор варианта мог показать его фото */
+  photo: [number, Dispatch<SetStateAction<number>>];
+};
 
 const OptionsContext = createContext<State | null>(null);
 
 function useOptions() {
   const state = useContext(OptionsContext);
-  if (!state) throw new Error("Компонент должен быть внутри ArtworkOptionsColumn");
+  if (!state) throw new Error("Компонент должен быть внутри ArtworkOptionsScope");
   return state;
 }
 
-export function ArtworkOptionsColumn({
+/** Индекс фото для Gallery, если она внутри карточки работы; иначе null — галерея хранит его сама. */
+export function useSharedPhotoIndex() {
+  return useContext(OptionsContext)?.photo ?? null;
+}
+
+export function ArtworkOptionsScope({
   artwork,
   className,
   children,
@@ -27,10 +38,19 @@ export function ArtworkOptionsColumn({
   className?: string;
   children: ReactNode;
 }) {
-  const [index, select] = useState(0);
+  const [index, setIndex] = useState(0);
+  const photo = useState(0);
+  const setPhoto = photo[1];
+
+  const select = (i: number) => {
+    setIndex(i);
+    const image = artwork.options?.[i]?.image;
+    if (image) setPhoto(galleryImages(artwork).findIndex((img) => img.src === image.src));
+  };
+
   return (
-    <OptionsContext.Provider value={{ artwork, index, select }}>
-      <div className={className}>{children}</div>
+    <OptionsContext.Provider value={{ artwork, index, select, photo }}>
+      <article className={className}>{children}</article>
     </OptionsContext.Provider>
   );
 }

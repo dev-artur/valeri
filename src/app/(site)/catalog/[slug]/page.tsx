@@ -6,13 +6,13 @@ import { ArtworkGrid } from "@/components/ArtworkCard";
 import {
   ArtworkContactButtons,
   ArtworkOptionPicker,
-  ArtworkOptionsColumn,
+  ArtworkOptionsScope,
   ArtworkPrice,
 } from "@/components/ArtworkOptions";
 import { Gallery } from "@/components/Gallery";
 import { RichText } from "@/components/RichText";
 import { getArtwork, getArtworks, getSettings } from "@/lib/data";
-import { siteUrl } from "@/lib/format";
+import { galleryImages, siteUrl } from "@/lib/format";
 import { STATUS_LABELS } from "@/lib/status";
 
 export async function generateStaticParams() {
@@ -70,10 +70,13 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
       </nav>
 
       {/* minmax(0, …): иначе лента миниатюр растягивает колонку шире экрана вместо прокрутки. */}
-      <article className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-14">
-        <Gallery images={artwork.images} title={artwork.title} />
+      <ArtworkOptionsScope
+        artwork={artwork}
+        className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-14"
+      >
+        <Gallery images={galleryImages(artwork)} title={artwork.title} />
 
-        <ArtworkOptionsColumn artwork={artwork} className="lg:sticky lg:top-24 lg:self-start">
+        <div className="lg:sticky lg:top-24 lg:self-start">
           <h1 className="font-serif text-4xl leading-tight sm:text-5xl">{artwork.title}</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -101,8 +104,8 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
           <div className="mt-8">
             <ArtworkContactButtons contacts={settings.contacts} url={`${siteUrl}/catalog/${artwork.slug}`} />
           </div>
-        </ArtworkOptionsColumn>
-      </article>
+        </div>
+      </ArtworkOptionsScope>
 
       {related.length > 0 && (
         <section className="mt-24" aria-labelledby="related-title">

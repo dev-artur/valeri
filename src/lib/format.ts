@@ -27,3 +27,10 @@ export function pluralizeWorks(n: number) {
 const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || (vercelUrl ? `https://${vercelUrl}` : "http://localhost:3000");
+
+/** Фото для галереи: основные фото работы, затем фото вариантов, которых среди них ещё нет. */
+export function galleryImages(artwork: Pick<Artwork, "images" | "options">) {
+  const seen = new Set(artwork.images.map((img) => img.src));
+  const extra = (artwork.options ?? []).flatMap((o) => (o.image && !seen.has(o.image.src) ? [o.image] : []));
+  return [...artwork.images, ...extra.filter((img, i) => extra.findIndex((e) => e.src === img.src) === i)];
+}
