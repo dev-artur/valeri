@@ -27,7 +27,7 @@ npm run dev
 
 1. Импортировать репозиторий в Vercel.
 2. Задать переменные окружения из `.env.example`:
-   - `NEXT_PUBLIC_SITE_URL` — боевой адрес, например `https://valeri.art`;
+   - `NEXT_PUBLIC_SITE_URL` — боевой адрес, например `https://valeri.art`. Можно не задавать: Vercel подставит основной адрес проекта;
    - `SANITY_REVALIDATE_SECRET` — длинная случайная строка.
 3. В Sanity → **API → Webhooks** создать вебхук:
    - URL: `https://<домен>/api/revalidate`;
