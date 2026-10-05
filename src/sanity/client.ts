@@ -8,7 +8,9 @@ export const client = isSanityConfigured
       projectId,
       dataset,
       apiVersion,
-      useCdn: true,
+      // Страницы кэширует Next. CDN Sanity обновляется с задержкой, и перестройка по вебхуку
+      // успевала забрать старые данные — поэтому читаем напрямую из API.
+      useCdn: false,
       perspective: "published",
     })
   : null;
