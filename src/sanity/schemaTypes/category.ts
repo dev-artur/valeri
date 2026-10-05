@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { slugify } from "../slugify";
 
 export const category = defineType({
@@ -6,6 +7,8 @@ export const category = defineType({
   title: "Категория",
   type: "document",
   fields: [
+    // Порядок задаётся перетаскиванием в списке «Категории».
+    orderRankField({ type: "category" }),
     defineField({
       name: "title",
       title: "Название",
@@ -29,21 +32,12 @@ export const category = defineType({
     defineField({
       name: "cover",
       title: "Обложка",
-      description: "Если не выбрать, возьмётся фото последней работы из категории",
+      description: "Если не выбрать, возьмётся фото первой работы из категории",
       type: "image",
       options: { hotspot: true },
     }),
-    defineField({
-      name: "order",
-      title: "Порядок",
-      description: "Чем меньше число, тем выше категория в списке",
-      type: "number",
-      initialValue: 10,
-    }),
   ],
-  orderings: [
-    { title: "По порядку", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
-  ],
+  orderings: [orderRankOrdering],
   preview: {
     select: { title: "title", media: "cover" },
   },

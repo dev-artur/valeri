@@ -26,9 +26,11 @@ const artworkFields = /* groq */ `
 `;
 
 const published = /* groq */ `_type == "artwork" && defined(slug.current) && count(images) > 0`;
+// Порядок из Studio (перетаскивание); у работ без ранга — сначала новые.
+const artworkOrder = /* groq */ `order(orderRank asc, _createdAt desc)`;
 
 export const artworksQuery = defineQuery(`
-  *[${published}] | order(_createdAt desc) { ${artworkFields} }
+  *[${published}] | ${artworkOrder} { ${artworkFields} }
 `);
 
 export const artworkBySlugQuery = defineQuery(`
@@ -36,13 +38,13 @@ export const artworkBySlugQuery = defineQuery(`
 `);
 
 export const categoriesQuery = defineQuery(`
-  *[_type == "category" && defined(slug.current)] | order(order asc, title asc) {
+  *[_type == "category" && defined(slug.current)] | order(orderRank asc, title asc) {
     title,
     "slug": slug.current,
     description,
     "cover": coalesce(
       cover${image},
-      (*[${published} && references(^._id)] | order(_createdAt desc))[0].images[0]${image}
+      (*[${published} && references(^._id)] | ${artworkOrder})[0].images[0]${image}
     ),
     "count": count(*[${published} && references(^._id)])
   }

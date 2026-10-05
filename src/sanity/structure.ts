@@ -1,13 +1,14 @@
 import type { StructureResolver } from "sanity/structure";
+import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 
 export const SETTINGS_ID = "siteSettings";
 
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
   S.list()
     .title("Сайт")
     .items([
-      S.documentTypeListItem("artwork").title("Работы"),
-      S.documentTypeListItem("category").title("Категории"),
+      orderableDocumentListDeskItem({ type: "artwork", title: "Работы", S, context }),
+      orderableDocumentListDeskItem({ type: "category", title: "Категории", S, context }),
       S.divider(),
       S.listItem()
         .title("Настройки сайта")

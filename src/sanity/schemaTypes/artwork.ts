@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { slugify } from "../slugify";
 import { STATUS_LABELS, STATUSES } from "../../lib/status";
 
@@ -11,6 +12,8 @@ export const artwork = defineType({
     { name: "details", title: "Детали" },
   ],
   fields: [
+    // Порядок задаётся перетаскиванием в списке «Работы»; новые работы встают в начало.
+    orderRankField({ type: "artwork", newItemPosition: "before" }),
     defineField({
       name: "title",
       title: "Название",
@@ -128,6 +131,7 @@ export const artwork = defineType({
     }),
   ],
   orderings: [
+    orderRankOrdering,
     { title: "Сначала новые", name: "createdDesc", by: [{ field: "_createdAt", direction: "desc" }] },
   ],
   preview: {
