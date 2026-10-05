@@ -16,6 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "ru_RU",
       type: "website",
     },
+    // Просим Dark Reader не перекрашивать сайт: он осветлял затемнение под подписями на фото,
+    // и белый текст пропадал. Картины лучше смотреть в родных цветах.
+    other: { "darkreader-lock": "true" },
   };
 }
 
