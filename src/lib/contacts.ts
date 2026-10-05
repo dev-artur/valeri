@@ -10,8 +10,11 @@ export type ContactLink = {
 
 const clean = (v?: string | null) => v?.trim().replace(/^@/, "") || undefined;
 
-export function contactLinks(contacts: Contacts, message?: string): ContactLink[] {
-  const q = message ? `?text=${encodeURIComponent(message)}` : "";
+/** Заготовка сообщения: в мессенджеры уходит text, в письмо — subject и text в теле. */
+export type ContactPrefill = { subject: string; text: string };
+
+export function contactLinks(contacts: Contacts, prefill?: ContactPrefill): ContactLink[] {
+  const q = prefill ? `?text=${encodeURIComponent(prefill.text)}` : "";
   const links: ContactLink[] = [];
 
   const telegram = clean(contacts.telegram);
@@ -28,8 +31,10 @@ export function contactLinks(contacts: Contacts, message?: string): ContactLink[
 
   const email = clean(contacts.email);
   if (email) {
-    const subject = message ? `?subject=${encodeURIComponent(message)}` : "";
-    links.push({ id: "email", label: "Почта", href: `mailto:${email}${subject}`, prefill: true });
+    const params = prefill
+      ? `?subject=${encodeURIComponent(prefill.subject)}&body=${encodeURIComponent(prefill.text)}`
+      : "";
+    links.push({ id: "email", label: "Почта", href: `mailto:${email}${params}`, prefill: true });
   }
 
   return links;

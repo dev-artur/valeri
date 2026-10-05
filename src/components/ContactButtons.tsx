@@ -6,7 +6,7 @@ export function ContactButtons({ artwork, contacts, url }: { artwork: Artwork; c
   const message = sold
     ? `Здравствуйте! Увидел(а) на сайте работу «${artwork.title}» — можно заказать похожую? ${url}`
     : `Здравствуйте! Интересует работа «${artwork.title}». ${url}`;
-  const links = contactLinks(contacts, message);
+  const links = contactLinks(contacts, { subject: `Работа «${artwork.title}»`, text: message });
   if (links.length === 0) return null;
 
   const [primary, ...rest] = links;

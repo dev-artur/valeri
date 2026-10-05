@@ -11,6 +11,8 @@ export default async function HomePage() {
   const featured = artworks.filter((a) => a.featured);
   const showcase = (featured.length > 0 ? featured : artworks).slice(0, 6);
   const hero = showcase[0];
+  // При 2 или 4 категориях три колонки оставили бы пустую ячейку справа.
+  const twoColumnCategories = categories.length % 2 === 0 && categories.length < 6;
 
   return (
     <>
@@ -44,7 +46,7 @@ export default async function HomePage() {
                 image={hero.images[0]}
                 fill
                 preload
-                sizes="(min-width: 768px) 55vw, 100vw"
+                sizes="(min-width: 1152px) 600px, (min-width: 768px) 52vw, 100vw"
                 className="object-cover transition duration-700 ease-out group-hover:scale-[1.02]"
               />
             </div>
@@ -61,7 +63,7 @@ export default async function HomePage() {
           <h2 id="categories-title" className="mb-8 font-serif text-4xl">
             Что я делаю
           </h2>
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className={twoColumnCategories ? "grid gap-6 sm:grid-cols-2" : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
             {categories.map((category) => (
               <li key={category.slug}>
                 <Link href={`/catalog?category=${category.slug}`} className="group block">
@@ -70,7 +72,11 @@ export default async function HomePage() {
                       <ArtImage
                         image={category.cover}
                         fill
-                        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                        sizes={
+                          twoColumnCategories
+                            ? "(min-width: 1152px) 552px, (min-width: 640px) 45vw, 100vw"
+                            : "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                        }
                         className="object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
                       />
                     )}
