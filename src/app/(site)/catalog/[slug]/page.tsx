@@ -64,7 +64,8 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
         </Link>
       </nav>
 
-      <article className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+      {/* minmax(0, …): иначе лента миниатюр растягивает колонку шире экрана вместо прокрутки. */}
+      <article className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-14">
         <Gallery images={artwork.images} title={artwork.title} />
 
         <div className="lg:sticky lg:top-24 lg:self-start">
