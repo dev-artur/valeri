@@ -18,7 +18,7 @@ Built with Next.js 16 (App Router), Sanity 6, Tailwind CSS 4 and TypeScript. It'
 ## What's inside
 
 - **Static pages with on-demand revalidation.** Every page is prerendered. A signed Sanity webhook hits `/api/revalidate`, which verifies the signature and calls `revalidateTag`, so a published edit shows up on the site within seconds.
-- **Embedded CMS.** Sanity Studio lives at `/studio` inside the same Next.js app. It has a Russian UI, a custom desk structure and a singleton "Site settings" document, so a non-technical editor can't create duplicates or delete it.
+- **Embedded CMS.** Sanity Studio lives at `/studio` inside the same Next.js app. It has a Russian UI, drag-and-drop ordering of artworks and categories (LexoRank via `@sanity/orderable-document-list`), and a singleton "Site settings" document, so a non-technical editor can't create duplicates or delete it.
 - **Image pipeline on the Sanity CDN.** A custom `next/image` loader requests resized WebP/AVIF from Sanity. The crop and focal point (hotspot) the editor picks in Studio are applied in previews, and LQIP blur placeholders come straight from asset metadata.
 - **Catalog filters synced to the URL.** Category and "available only" filters live in search params, so filtered views are shareable. They run client-side over a statically generated page and fall back to plain links without JS.
 - **Messenger checkout.** No cart or payments: contact links build Telegram/WhatsApp deep links with the artwork title and URL already in the message.
