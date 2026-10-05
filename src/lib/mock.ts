@@ -202,7 +202,7 @@ export const mockArtworks: Artwork[] = [
     slug: "avtorskie-otkrytki",
     category: other,
     images: [img("craft-2", 1200, 1200, "Набор открыток")],
-    status: "commission",
+    status: "custom",
     price: null,
     options: [
       { label: "5 штук", price: 900 },

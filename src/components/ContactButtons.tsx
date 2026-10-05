@@ -17,7 +17,9 @@ export function ContactButtons({ artwork, contacts, url, option }: Props) {
     : "";
   const message = sold
     ? `Здравствуйте! Увидел(а) на сайте работу «${artwork.title}» — можно заказать похожую? ${url}`
-    : `Здравствуйте! Интересует работа «${artwork.title}»${choice}. ${url}`;
+    : artwork.status === "custom"
+      ? `Здравствуйте! Хочу заказать «${artwork.title}»${choice}. ${url}`
+      : `Здравствуйте! Интересует работа «${artwork.title}»${choice}. ${url}`;
   const links = contactLinks(contacts, { subject: `Работа «${artwork.title}»`, text: message });
   if (links.length === 0) return null;
 
@@ -31,7 +33,7 @@ export function ContactButtons({ artwork, contacts, url, option }: Props) {
         rel="noopener noreferrer"
         className="block bg-ink px-6 py-3.5 text-center text-sm text-paper transition-colors hover:bg-accent"
       >
-        {sold ? "Заказать похожую" : artwork.status === "commission" ? "Заказать" : "Хочу эту работу"} — написать
+        {sold ? "Заказать похожую" : artwork.status === "available" ? "Хочу эту работу" : "Заказать"} — написать
         в {primary.label}
       </a>
       {rest.length > 0 && (

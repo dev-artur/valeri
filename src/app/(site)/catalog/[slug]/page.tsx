@@ -119,6 +119,7 @@ export default async function ArtworkPage({ params }: PageProps<"/catalog/[slug]
 function StatusBadge({ status }: { status: keyof typeof STATUS_LABELS }) {
   const color = {
     available: "bg-[#e3ecd9] text-[#3f5a2c]",
+    custom: "bg-[#f1e4d0] text-[#7a5520]",
     commission: "bg-[#f1e4d0] text-[#7a5520]",
     sold: "bg-line text-muted",
   }[status];

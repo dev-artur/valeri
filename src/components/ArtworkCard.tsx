@@ -20,7 +20,7 @@ export function ArtworkCard({ artwork, preload }: { artwork: Artwork; preload?: 
         />
         {artwork.status !== "available" && (
           <span className="absolute top-3 left-3 bg-paper/90 px-2.5 py-1 text-[11px] font-medium tracking-wide text-ink uppercase backdrop-blur-sm">
-            {sold ? STATUS_LABELS.sold : "Под заказ"}
+            {sold ? STATUS_LABELS.sold : artwork.status === "custom" ? STATUS_LABELS.custom : "Под заказ"}
           </span>
         )}
       </div>
