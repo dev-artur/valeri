@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+<defs>
+<filter id="felt"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="67"/></filter>
+<filter id="fuzz"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.12 0"/></filter>
+</defs>
+<rect width="100%" height="100%" fill="#f8f2ea"/>
+<g filter="url(#felt)"><circle cx="602" cy="603" r="456" fill="#d1a98a"/><circle cx="606" cy="595" r="414" fill="#a26b4f"/><circle cx="608" cy="591" r="372" fill="#efe3d6"/><circle cx="604" cy="598" r="330" fill="#5a3d31"/><circle cx="606" cy="603" r="288" fill="#d1a98a"/><circle cx="606" cy="592" r="246" fill="#a26b4f"/><circle cx="608" cy="600" r="204" fill="#efe3d6"/><circle cx="606" cy="598" r="162" fill="#5a3d31"/><circle cx="607" cy="606" r="120" fill="#d1a98a"/></g>
+<rect width="100%" height="100%" filter="url(#fuzz)"/>
+</svg>

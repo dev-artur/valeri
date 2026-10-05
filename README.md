@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Valeri — каталог авторских работ
 
-## Getting Started
+Сайт-витрина с картинами, изделиями из шерсти и другими работами. Контентом управляют через встроенную админку Sanity Studio по адресу `/studio`. Покупка — через кнопку «Хочу эту работу»: она открывает Telegram или WhatsApp с готовым текстом сообщения.
 
-First, run the development server:
+**Стек:** Next.js 16 (App Router, статическая генерация), Sanity 6 (headless CMS + CDN изображений), Tailwind CSS 4, TypeScript.
+
+## Запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Сайт откроется на http://localhost:3000. Пока не указан `NEXT_PUBLIC_SANITY_PROJECT_ID`, он работает на тестовых данных из [src/lib/mock.ts](src/lib/mock.ts).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Подключение Sanity
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Зарегистрироваться на [sanity.io](https://www.sanity.io) и создать проект в [sanity.io/manage](https://www.sanity.io/manage) с датасетом `production`.
+2. Скопировать `.env.example` в `.env.local` и вписать **Project ID**.
+3. В настройках проекта → **API → CORS origins** добавить `http://localhost:3000` и боевой домен, включив **Allow credentials**. Без этого Studio на `/studio` не сможет войти.
+4. В **Members** пригласить художницу с ролью Editor или Administrator.
+5. Открыть `/studio` и заполнить:
+   - **Настройки сайта**: имя, подзаголовок, «Обо мне», контакты. Без контактов кнопка покупки не появится.
+   - **Категории**, затем **Работы**.
 
-## Learn More
+## Деплой (Vercel)
 
-To learn more about Next.js, take a look at the following resources:
+1. Импортировать репозиторий в Vercel.
+2. Задать переменные окружения из `.env.example`:
+   - `NEXT_PUBLIC_SITE_URL` — боевой адрес, например `https://valeri.art`;
+   - `SANITY_REVALIDATE_SECRET` — длинная случайная строка.
+3. В Sanity → **API → Webhooks** создать вебхук:
+   - URL: `https://<домен>/api/revalidate`;
+   - Trigger on: Create, Update, Delete;
+   - Filter: `_type in ["artwork", "category", "siteSettings"]`;
+   - Projection: `{_type}`;
+   - Secret: то же значение, что в `SANITY_REVALIDATE_SECRET`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+После публикации в Studio страницы обновляются сразу. Если вебхук не настроен, обновление произойдёт в течение часа.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Как устроено
 
-## Deploy on Vercel
+| Путь | Что там |
+| --- | --- |
+| `src/app/(site)/` | Страницы сайта: главная, `/catalog`, `/catalog/[slug]`, `/about` |
+| `src/app/studio/` | Встроенная Sanity Studio |
+| `src/app/api/revalidate/` | Приёмник вебхука Sanity, сбрасывает кэш |
+| `src/sanity/schemaTypes/` | Схемы контента: работа, категория, настройки |
+| `src/sanity/queries.ts` | GROQ-запросы |
+| `src/lib/data.ts` | Получение данных: Sanity или тестовые моки |
+| `sanity.config.ts` | Конфиг Studio: русский интерфейс, структура меню |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Картинки отдаёт CDN Sanity через кастомный loader [src/sanity/image-loader.ts](src/sanity/image-loader.ts), с ресайзом и WebP/AVIF. Кроп и точка фокуса (hotspot), выбранные в Studio, учитываются в превью.
+- Фильтры каталога (`?category=…&status=available`) работают на клиенте поверх статически сгенерированной страницы.
